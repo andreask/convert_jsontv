@@ -153,10 +153,10 @@ def create_xml():
 os.environ['TZ'] = 'Europe/Stockholm'
 
 print "Deleting old files..."
-# if os.path.exists('/tmp/xmltv_convert/json'):
-#     for filename in os.listdir('/tmp/xmltv_convert/json/'):
-#         if filename != '.' and filename != '..':
-#             os.remove('/tmp/xmltv_convert/json/%s' % filename)
+if os.path.exists('/tmp/xmltv_convert/json'):
+    for filename in os.listdir('/tmp/xmltv_convert/json/'):
+        if filename != '.' and filename != '..':
+            os.remove('/tmp/xmltv_convert/json/%s' % filename)
 
 if os.path.exists('/tmp/xmltv_convert/xml'):
     for filename in os.listdir('/tmp/xmltv_convert/xml/'):
@@ -164,7 +164,7 @@ if os.path.exists('/tmp/xmltv_convert/xml'):
             os.remove('/tmp/xmltv_convert/xml/%s' % filename)
 
 print "Downloading files..."
-#download_json_files()
+download_json_files()
 
 print "Reformat json to xml..."
 create_xml()
