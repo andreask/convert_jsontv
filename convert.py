@@ -1,3 +1,4 @@
+import datetime
 import gzip
 import json
 import time
@@ -18,13 +19,19 @@ def download_json_files():
 
     for anchor in soup.findAll('a', href=True):
         if anchor['href'] != '../':
-            stdout.write("Downloading http://xmltv.tvtab.la/json/%s " % anchor['href'])
-            f = urllib2.urlopen('http://xmltv.tvtab.la/json/%s' % anchor['href'])
-            data = f.read()
-            with open('/tmp/xmltv_convert/json/%s' % anchor['href'].replace('.gz', ''), 'w+ ') as outfile:
-                outfile.write(data)
-            stdout.write("Done!\n")
-            stdout.flush()
+            try:
+                filedate = datetime.datetime.strptime(anchor['href'].split("_")[1][0:10], "%Y-%m-%d").date()
+            except IndexError:
+                filedate = datetime.datetime.today().date()
+
+            if filedate >= datetime.datetime.today().date():
+                stdout.write("Downloading http://xmltv.tvtab.la/json/%s " % anchor['href'])
+                f = urllib2.urlopen('http://xmltv.tvtab.la/json/%s' % anchor['href'])
+                data = f.read()
+                with open('/tmp/xmltv_convert/json/%s' % anchor['href'].replace('.gz', ''), 'w+ ') as outfile:
+                    outfile.write(data)
+                stdout.write("Done!\n")
+                stdout.flush()
 
 def create_xml():
     if not os.path.exists('/tmp/xmltv_convert/xml'):
