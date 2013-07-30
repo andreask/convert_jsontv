@@ -24,7 +24,7 @@ Install dependencies:
 pip install -r pip-stable.txt
 
 Finally run the program:
-python convert.py
+python convert.py <complete-path-to-swedb.xmltv>
 
 When the program is finished (will take a while), you will have valid XMLTV files under the /tmp/xmltv_convert/xml/.
 

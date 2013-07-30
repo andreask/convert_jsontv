@@ -4,10 +4,24 @@ import json
 import time
 import urllib2
 import os
-from sys import stdout
+from sys import stdout, argv
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+
+channels = []
+
+def parse_arguments():
+    if len(argv) == 2:
+        file = open(argv[1], "r")
+        for line in file.readlines():
+            try:
+                line_array = line.replace("\n", "").split("=")
+                if line_array[0] == "channel":
+                    print line_array[1]
+                    channels.append(line_array[1])
+            except IndexError:
+                pass
 
 def download_json_files():
     if not os.path.exists('/tmp/xmltv_convert/json'):
@@ -20,18 +34,21 @@ def download_json_files():
     for anchor in soup.findAll('a', href=True):
         if anchor['href'] != '../':
             try:
-                filedate = datetime.datetime.strptime(anchor['href'].split("_")[1][0:10], "%Y-%m-%d").date()
+                anchor_list = anchor['href'].split("_")
+                channel = anchor_list[0]
+                filedate = datetime.datetime.strptime(anchor_list[1][0:10], "%Y-%m-%d").date()
             except IndexError:
                 filedate = datetime.datetime.today().date()
 
             if filedate >= datetime.datetime.today().date():
-                stdout.write("Downloading http://xmltv.tvtab.la/json/%s " % anchor['href'])
-                f = urllib2.urlopen('http://xmltv.tvtab.la/json/%s' % anchor['href'])
-                data = f.read()
-                with open('/tmp/xmltv_convert/json/%s' % anchor['href'].replace('.gz', ''), 'w+ ') as outfile:
-                    outfile.write(data)
-                stdout.write("Done!\n")
-                stdout.flush()
+                if len(channels) == 0 or channel in channels or channel == "channels.js.gz":
+                    stdout.write("Downloading http://xmltv.tvtab.la/json/%s " % anchor['href'])
+                    f = urllib2.urlopen('http://xmltv.tvtab.la/json/%s' % anchor['href'])
+                    data = f.read()
+                    with open('/tmp/xmltv_convert/json/%s' % anchor['href'].replace('.gz', ''), 'w+ ') as outfile:
+                        outfile.write(data)
+                    stdout.write("Done!\n")
+                    stdout.flush()
 
 def create_xml():
     if not os.path.exists('/tmp/xmltv_convert/xml'):
@@ -169,6 +186,9 @@ if os.path.exists('/tmp/xmltv_convert/xml'):
     for filename in os.listdir('/tmp/xmltv_convert/xml/'):
         if filename != '.' and filename != '..':
             os.remove('/tmp/xmltv_convert/xml/%s' % filename)
+
+print "Check which files should be downloaded..."
+parse_arguments()
 
 print "Downloading files..."
 download_json_files()
