@@ -8,3 +8,28 @@ source of information can be used.
 Licence
 -------
 GPL_v3
+
+Usage
+-----
+First create a virtual python environment:
+virtualenv --no-site-packages env
+
+Activate the virtual environment:
+source env/bin/activate
+
+Upgrade pip:
+pip install pip --upgrade
+
+Install dependencies:
+pip install -r pip-stable.txt
+
+Finally run the program:
+python convert.py
+
+When the program is finished (will take a while), you will have valid XMLTV files under the /tmp/xmltv_convert/xml/.
+
+Deployment
+----------
+When the xml files are generated (actually xml.gz files), you then need to setup a server that will serve the files to
+the grabber. I would also recommend using rsync to sync the files from the /tmp/xmltv_convert/xml/ folder to your
+webserver folder. That way when one xml file is deleted, they will be deleted in the web folder as well.
