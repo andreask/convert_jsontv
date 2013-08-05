@@ -164,13 +164,13 @@ def create_xml():
                     if data['jsontv']['channels'][key].has_key('icon'):
                         xml_icon = ET.SubElement(xml_channel, "icon", { "src": data['jsontv']['channels'][key]['icon'] })
 
-            with gzip.open('/tmp/xmltv_convert/xml/%s' % filename.replace('.js', '.xml.gz'), 'w+') as outfile:
-                text = ET.tostring(root, encoding="utf-8")
-                doc = minidom.parseString(text)
-                dt = minidom.getDOMImplementation('').createDocumentType('tv', None, 'xmltv.dtd')
-                doc.insertBefore(dt, doc.documentElement)
-                outfile.write(doc.toprettyxml(encoding="utf-8"))
-                outfile.close()
+            outfile = gzip.open('/tmp/xmltv_convert/xml/%s' % filename.replace('.js', '.xml.gz'), 'w+')
+            text = ET.tostring(root, encoding="utf-8")
+            doc = minidom.parseString(text)
+            dt = minidom.getDOMImplementation('').createDocumentType('tv', None, 'xmltv.dtd')
+            doc.insertBefore(dt, doc.documentElement)
+            outfile.write(doc.toprettyxml(encoding="utf-8"))
+            outfile.close()
 
             stdout.write("Done!\n")
 
