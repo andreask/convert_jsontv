@@ -16,3 +16,8 @@ Fixed so that the script can parse a Swedb.xmltv configuration file to decide wh
 1.1.1
 -----
 Rewrote the gzip file part so that it should work in python 2.6
+
+1.1.2
+-----
+Rewrote file opening so that the file is checked for gzip format first and then opened as a text file if not
+in gzip format.
