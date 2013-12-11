@@ -25,3 +25,7 @@ in gzip format.
 1.1.3
 -----
 Fixed credits xml info so that it follows the xmltv.dtd.
+
+1.1.4
+-----
+Fixed order so that it corresponds with the xmltv.dtd.

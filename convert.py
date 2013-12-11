@@ -107,6 +107,14 @@ def create_xml():
                             xml_desc = ET.SubElement(xml_programme, "desc", { "lang": key })
                             xml_desc.text = parsed_description
 
+                    # Credits COULD be present
+                    if programme.has_key("credits"):
+                        xml_credits = ET.SubElement(xml_programme, "credits")
+                        for key in credits_order:
+                            for value in programme['credits'].get(key, []):
+                                xml_credit = ET.SubElement(xml_credits, key)
+                                xml_credit.text = value
+
                     # A date COULD be there
                     if programme.has_key("date"):
                         xml_date = ET.SubElement(xml_programme, "date")
@@ -119,35 +127,16 @@ def create_xml():
                                 xml_category = ET.SubElement(xml_programme, "category", { "lang": key })
                                 xml_category.text = value.replace("\n", "")
 
-                    # An episode number sequence COULD be present
-                    if programme.has_key("episodeNum"):
-                        for key in programme['episodeNum'].keys():
-                            episode_num = ET.SubElement(xml_programme, "episode-num", { "system": key })
-                            episode_num.text = programme['episodeNum'][key].replace("\n", "")
-
-                    # Credits COULD be present
-                    if programme.has_key("credits"):
-                        xml_credits = ET.SubElement(xml_programme, "credits")
-                        for key in credits_order:
-                            for value in programme['credits'].get(key, []):
-                                xml_credit = ET.SubElement(xml_credits, key)
-                                xml_credit.text = value
-
                     # An url COULD be present
                     if programme.has_key("url"):
                         url = ET.SubElement(xml_programme, "url")
                         url.text = programme['url'][0]
 
-                    # A rating COULD be present
-                    if programme.has_key("rating"):
-                        if programme['rating'].has_key("stars"):
-                            star_rating = ET.SubElement(xml_programme, "star-rating")
-                            star_rating_value = ET.SubElement(star_rating, "value")
-                            star_rating_value.text = programme['rating']['stars']
-                        if programme['rating'].has_key("mpaa"):
-                            rating = ET.SubElement(xml_programme, "rating", { "system": "MPAA" })
-                            rating_value = ET.SubElement(rating, "value")
-                            rating_value.text = programme['rating']['mpaa']
+                    # An episode number sequence COULD be present
+                    if programme.has_key("episodeNum"):
+                        for key in programme['episodeNum'].keys():
+                            episode_num = ET.SubElement(xml_programme, "episode-num", { "system": key })
+                            episode_num.text = programme['episodeNum'][key].replace("\n", "")
 
                     # Video COULD be present
                     if programme.has_key("video"):
@@ -155,6 +144,17 @@ def create_xml():
                             xml_video = ET.SubElement(xml_programme, "video")
                             xml_video_aspect = ET.SubElement(xml_video, "aspect")
                             xml_video_aspect.text = programme['video']['aspect']
+
+                    # A rating COULD be present
+                    if programme.has_key("rating"):
+                            if programme['rating'].has_key("mpaa"):
+                            rating = ET.SubElement(xml_programme, "rating", { "system": "MPAA" })
+                            rating_value = ET.SubElement(rating, "value")
+                            rating_value.text = programme['rating']['mpaa']
+                        if programme['rating'].has_key("stars"):
+                            star_rating = ET.SubElement(xml_programme, "star-rating")
+                            star_rating_value = ET.SubElement(star_rating, "value")
+                            star_rating_value.text = programme['rating']['stars']
 
             else:
                 for key in data['jsontv']['channels']:
