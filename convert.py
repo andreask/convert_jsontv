@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 
+credits_order = ['director', 'actor', 'writer', 'adapter', 'producer',
+                 'composer', 'editor', 'presenter', 'commentator', 'guest']
+
 channels = []
 
 def parse_arguments():
@@ -27,7 +30,7 @@ def download_json_files():
     if not os.path.exists('/tmp/xmltv_convert/json'):
         os.makedirs('/tmp/xmltv_convert/json')
 
-    page = urllib2.urlopen('http://xmltv.du.se/json/')
+    page = urllib2.urlopen('http://json.xmltv.se/')
     soup = BeautifulSoup(page)
     soup.prettify()
 
@@ -122,6 +125,14 @@ def create_xml():
                             episode_num = ET.SubElement(xml_programme, "episode-num", { "system": key })
                             episode_num.text = programme['episodeNum'][key].replace("\n", "")
 
+                    # Credits COULD be present
+                    if programme.has_key("credits"):
+                        xml_credits = ET.SubElement(xml_programme, "credits")
+                        for key in credits_order:
+                            for value in programme['credits'].get(key, []):
+                                xml_credit = ET.SubElement(xml_credits, key)
+                                xml_credit.text = value
+
                     # An url COULD be present
                     if programme.has_key("url"):
                         url = ET.SubElement(xml_programme, "url")
@@ -137,14 +148,6 @@ def create_xml():
                             rating = ET.SubElement(xml_programme, "rating", { "system": "MPAA" })
                             rating_value = ET.SubElement(rating, "value")
                             rating_value.text = programme['rating']['mpaa']
-
-                    # Credits COULD be present
-                    if programme.has_key("credits"):
-                        xml_credits = ET.SubElement(xml_programme, "credits")
-                        for key in programme['credits'].keys():
-                            for value in programme['credits'][key]:
-                                xml_credit = ET.SubElement(xml_credits, key)
-                                xml_credit.text = value
 
                     # Video COULD be present
                     if programme.has_key("video"):

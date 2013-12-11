@@ -21,3 +21,7 @@ Rewrote the gzip file part so that it should work in python 2.6
 -----
 Rewrote file opening so that the file is checked for gzip format first and then opened as a text file if not
 in gzip format.
+
+1.1.3
+-----
+Fixed credits xml info so that it follows the xmltv.dtd.
