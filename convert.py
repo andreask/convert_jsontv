@@ -147,7 +147,7 @@ def create_xml():
 
                     # A rating COULD be present
                     if programme.has_key("rating"):
-                            if programme['rating'].has_key("mpaa"):
+                        if programme['rating'].has_key("mpaa"):
                             rating = ET.SubElement(xml_programme, "rating", { "system": "MPAA" })
                             rating_value = ET.SubElement(rating, "value")
                             rating_value.text = programme['rating']['mpaa']
@@ -170,7 +170,7 @@ def create_xml():
                     if data['jsontv']['channels'][key].has_key('icon'):
                         xml_icon = ET.SubElement(xml_channel, "icon", { "src": data['jsontv']['channels'][key]['icon'] })
 
-            outfile = gzip.open('/tmp/xmltv_convert/xml/%s' % filename.replace('.js', '.xml.gz'), 'w+')
+            outfile = gzip.GzipFile('/tmp/xmltv_convert/xml/%s' % filename.replace('.js', '.xml.gz'), 'w+', 9, None, long(1))
             text = ET.tostring(root, encoding="utf-8")
             doc = minidom.parseString(text)
             dt = minidom.getDOMImplementation('').createDocumentType('tv', None, 'xmltv.dtd')
