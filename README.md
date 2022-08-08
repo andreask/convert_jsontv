@@ -12,7 +12,7 @@ GPL_v3
 Usage
 -----
 First create a virtual python environment:
-virtualenv --no-site-packages env
+python3 -m venv env
 
 Activate the virtual environment:
 source env/bin/activate
